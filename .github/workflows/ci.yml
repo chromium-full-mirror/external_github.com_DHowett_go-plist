@@ -9,11 +9,20 @@ jobs:
         include:
           - { go: stable, tags: appengine }
     name: Build and Test (Go ${{ matrix.go }})
+    env:
+      GOPATH: /go
+      GO_PACKAGE: howett.net/plist
     steps:
       - uses: actions/checkout@v7
-      - name: Set up Go
-        uses: actions/setup-go@v7
+      - uses: actions/setup-go@v7
         with:
           go-version: ${{ matrix.go }}
           cache-dependency-path: 'go.sum'
+      # Earlier versions of go, such as 1.2, do not support running from the module root
+      - run: |-
+          mkdir -p $(dirname $GOPATH/src/$GO_PACKAGE)
+          ln -s $(pwd) $GOPATH/src/$GO_PACKAGE
+          cd $GOPATH/src/$GO_PACKAGE
       - run: go test ${{ matrix.tags && format('-tags {0}', matrix.tags) }}
+        name: Test
+        working-directory: $GOPATH/src/$GO_PACKAGE
