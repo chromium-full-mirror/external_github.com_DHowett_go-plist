@@ -26,6 +26,6 @@ jobs:
           mkdir -p $(dirname $GOPATH/src/$GO_PACKAGE);
           ln -s $(pwd) $GOPATH/src/$GO_PACKAGE;
         name: Prepare GOROOT
-      - run: go test -cover -tags matrix.tag
+      - run: go test -cover -tags ${{ matrix.tag }}
         name: Test
         working-directory: ${{env.GOPATH}}/src/${{env.GO_PACKAGE}}
