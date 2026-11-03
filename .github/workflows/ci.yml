@@ -12,7 +12,7 @@ jobs:
           - { go: '1.14', tag: 'appengine' }
     name: Build and Test (Go ${{ matrix.go }} ${{ matrix.tag }})
     env:
-      GOPATH: /go
+      GOPATH: ${{ github.workspace }}/go
       GO_PACKAGE: howett.net/plist
       RUNNER_TOOL_CACHE: /toolcache
     steps:
@@ -25,7 +25,7 @@ jobs:
       - run: |-
           mkdir -p $(dirname $GOPATH/src/$GO_PACKAGE);
           ln -s $(pwd) $GOPATH/src/$GO_PACKAGE;
-        name: Prepare GOROOT
+        name: Prepare GOPATH
       - run: go test -cover -tags ${{ matrix.tag }}
         name: Test
         working-directory: ${{env.GOPATH}}/src/${{env.GO_PACKAGE}}
