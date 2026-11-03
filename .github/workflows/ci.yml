@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go: [ '1.2', '1.13', 'stable' ]
+        go: [ '1.2', '1.14', 'stable' ]
         include:
           - { go: stable, tags: appengine }
     name: Build and Test (Go ${{ matrix.go }})
@@ -20,9 +20,8 @@ jobs:
           cache-dependency-path: 'go.sum'
       # Earlier versions of go, such as 1.2, do not support running from the module root
       - run: |-
-          mkdir -p $(dirname $GOPATH/src/$GO_PACKAGE)
-          ln -s $(pwd) $GOPATH/src/$GO_PACKAGE
-          cd $GOPATH/src/$GO_PACKAGE
+          mkdir -p $(dirname $GOPATH/src/$GO_PACKAGE);
+          ln -s $(pwd) $GOPATH/src/$GO_PACKAGE;
       - run: go test ${{ matrix.tags && format('-tags {0}', matrix.tags) }}
         name: Test
-        working-directory: $GOPATH/src/$GO_PACKAGE
+        working-directory: ${{env.GOPATH}}/src/${{env.GO_PACKAGE}}
