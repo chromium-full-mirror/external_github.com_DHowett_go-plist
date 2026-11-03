@@ -7,7 +7,10 @@ jobs:
       matrix:
         go: [ '1.2', '1.14', 'stable' ]
         tag: [ 'default', 'appengine' ]
-    name: Build and Test (Go ${{ matrix.go }})
+        exclude:
+          - { go: '1.2', tag: 'appengine' }
+          - { go: '1.14', tag: 'appengine' }
+    name: Build and Test (Go ${{ matrix.go }} ${{ matrix.tag }})
     env:
       GOPATH: /go
       GO_PACKAGE: howett.net/plist
@@ -23,6 +26,6 @@ jobs:
           mkdir -p $(dirname $GOPATH/src/$GO_PACKAGE);
           ln -s $(pwd) $GOPATH/src/$GO_PACKAGE;
         name: Prepare GOROOT
-      - run: go test -tags matrix.tag
+      - run: go test -cover -tags matrix.tag
         name: Test
         working-directory: ${{env.GOPATH}}/src/${{env.GO_PACKAGE}}
