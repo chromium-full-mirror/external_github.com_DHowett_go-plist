@@ -5,13 +5,15 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go: [ '1.13', '1.23', '1.24' ]
+        go: [ '1.2', '1.13', 'stable' ]
+        include:
+          - { go: stable, tags: appengine }
     name: Build and Test (Go ${{ matrix.go }})
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7
         with:
           go-version: ${{ matrix.go }}
           cache-dependency-path: 'go.sum'
-      - run: go test
+      - run: go test ${{ matrix.tags && format('-tags {0}', matrix.tags) }}
