@@ -7,11 +7,13 @@ jobs:
       matrix:
         go: [ '1.2', '1.14', 'stable' ]
         include:
+          - { go: stable }
           - { go: stable, tags: appengine }
     name: Build and Test (Go ${{ matrix.go }})
     env:
       GOPATH: /go
       GO_PACKAGE: howett.net/plist
+      RUNNER_TOOL_CACHE: /toolcache
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-go@v7
