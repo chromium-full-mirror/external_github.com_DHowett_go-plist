@@ -6,9 +6,7 @@ jobs:
     strategy:
       matrix:
         go: [ '1.2', '1.14', 'stable' ]
-        include:
-          - { go: stable }
-          - { go: stable, tags: appengine }
+        tag: [ 'default', 'appengine' ]
     name: Build and Test (Go ${{ matrix.go }})
     env:
       GOPATH: /go
@@ -24,6 +22,7 @@ jobs:
       - run: |-
           mkdir -p $(dirname $GOPATH/src/$GO_PACKAGE);
           ln -s $(pwd) $GOPATH/src/$GO_PACKAGE;
-      - run: go test ${{ matrix.tags && format('-tags {0}', matrix.tags) }}
+        name: Prepare GOROOT
+      - run: go test -tags matrix.tag
         name: Test
         working-directory: ${{env.GOPATH}}/src/${{env.GO_PACKAGE}}
